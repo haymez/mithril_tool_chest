@@ -1,35 +1,28 @@
 // Code for mithril widgets
 
-var Todo = function(data) {
-  this.description = m.prop(data.description);
-  this.done = m.prop(false);
-}
-
 var home = {
   controller: function() {
-    this.list = [];
 
-    this.description = m.prop('');
-
-    this.add = function() {
-      this.list.push(new Todo({description: this.description()}));
-      this.description('');
-    }.bind(this);
   },
 
   view: function(ctrl) {
-    return m('body', [
-      m('input', {onchange: m.withAttr('value', ctrl.description), value: ctrl.description()}),
-      m('button', {onclick: ctrl.add}, 'Add'),
-      m('table', [
-        ctrl.list.map(function(item, index) {
-          return m('tr', [
-            m('td', [
-              m('input[type=checkbox]')
-            ]),
-            m('td', item.description()),
+    return m('div', [
+      m('h1', 'Mithril Widgets'),
+      m('hr'),
+      m('p', 'Click on one of the examples below to sample a widget.'),
+      m('table.pure-table', [
+        m('thead', [
+          m('tr', [
+            m('th', 'Widget'),
+            m('th', 'Link')
           ])
-        })
+        ]),
+        m('tr', [
+          m('td', 'Table'),
+          m('td', [
+            m('a[href="/table"]', {config: m.route}, 'Link')
+          ])
+        ])
       ])
     ])
   }
