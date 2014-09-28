@@ -6,7 +6,7 @@ var table = {
     this.styles     = (opts) ? opts : {};
     this.currColumn = m.prop();
     this.reverse    = m.prop(false);
-    this.paginate   = m.prop(5);
+    this.paginate   = m.prop(10);
     this.currentPage = m.prop(1);
 
 
@@ -81,7 +81,7 @@ var table = {
     var search = m('input' + inputClass, {type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
 
     var paginate = [];
-    for(var i = 0; i < Math.ceil(ctrl.filtered.length / ctrl.paginate()); i++) {
+    if(ctrl.paginate() < ctrl.filtered.length) for(var i = 0; i < Math.ceil(ctrl.filtered.length / ctrl.paginate()); i++) {
       var number = i + 1;
       if(i < Math.ceil(ctrl.filtered.length / ctrl.paginate()) - 1) number += ', ';
       paginate.push(
