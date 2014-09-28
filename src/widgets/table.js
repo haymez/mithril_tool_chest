@@ -1,12 +1,13 @@
 var table = {
-  controller: function(header, body, opts) {
-    this.header     = header;
-    this.body       = body;
-    this.filtered   = this.body;
-    this.styles     = (opts) ? opts : {};
-    this.currColumn = m.prop();
-    this.reverse    = m.prop(false);
-    this.paginate   = m.prop(10);
+  controller: function(rows, opts) {
+    this.header      = rows.splice(0, 1)[0];
+    this.body        = rows;
+    this.filtered    = this.body;
+    this.styles      = (opts.style) ? opts.style : {};
+    this.paginate    = (opts.paginate) ? m.prop(opts.paginate) : m.prop(this.body.length);
+    this.search      = (opts.search) ? opts.search : false;
+    this.currColumn  = m.prop();
+    this.reverse     = m.prop(false);
     this.currentPage = m.prop(1);
 
 
@@ -77,17 +78,29 @@ var table = {
       })
     ])
 
-    var inputClass = (ctrl.styles.search) ? ctrl.styles.search : ''
-    var search = m('input' + inputClass, {type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
+    var inputClass = (ctrl.styles.input) ? ctrl.styles.input : ''
+    var search = [];
+    if(ctrl.search)
+      search = m('input' + inputClass, {type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
 
-    var paginate = [];
-    if(ctrl.paginate() < ctrl.filtered.length) for(var i = 0; i < Math.ceil(ctrl.filtered.length / ctrl.paginate()); i++) {
-      var number = i + 1;
-      if(i < Math.ceil(ctrl.filtered.length / ctrl.paginate()) - 1) number += ', ';
-      paginate.push(
-        m('span', {onclick: m.withAttr('textContent', ctrl.goToPage)}, number)
-      );
-    }
+    var paginate    = [];
+    var totalPages  = Math.ceil(ctrl.filtered.length / ctrl.paginate());
+    var startNumber = (ctrl.currentPage() - 5 < 0) ? 0 : ctrl.currentPage() - 5;
+    var endNumber   = (startNumber + 10 > totalPages) ? totalPages : startNumber + 10;
+    if(ctrl.paginate() < ctrl.filtered.length) 
+      for(var i = startNumber; i < endNumber; i++) {
+        var number = i + 1;
+        if(startNumber > 1 && i === startNumber) paginate.push('... ');
+        if(i < Math.ceil(ctrl.filtered.length / ctrl.paginate()) - 1) number += ' ';
+        if(i+1 !== ctrl.currentPage())
+          paginate.push(m('span', {onclick: m.withAttr('textContent', ctrl.goToPage)}, number));
+        else {
+          paginate.push(
+            m('span', {style: 'font-weight: bold;', onclick: m.withAttr('textContent', ctrl.goToPage)}, number)
+          );
+        }
+        if(endNumber < totalPages && i === endNumber - 1) paginate.push('...');
+      }
 
     return [search, table, paginate];
   }

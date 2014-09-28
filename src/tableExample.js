@@ -5,12 +5,13 @@ var tableExample = {
     var cities     = ['Stonewall', 'Arcadia', 'Berwick', 'Pineville', 'Homer', 'Covington'];
     var states     = ['Louisiana', 'Mississippi', 'Florida', 'Texas', 'Arkansas', 'Tennessee'];
 
-    this.header    = ['Index', 'First Name', 'Last Name', 'Phone Number', 'City', 'State', 'Zip'];
-    this.body      = [];
+    this.rows      = [
+      ['Index', 'First Name', 'Last Name', 'Phone Number', 'City', 'State', 'Zip'],
+    ];
 
     // Generate semi-random list of contacts
-    for(var i = 0; i < 20; i++) {
-      this.body.push([
+    for(var i = 0; i < 100; i++) {
+      this.rows.push([
         i,
         firstNames[Math.floor(Math.random()*(firstNames.length))],
         lastNames[Math.floor(Math.random()*(lastNames.length))],
@@ -22,15 +23,19 @@ var tableExample = {
     }
 
     // Styles for table and search bar
-    var styles = {
-      up:     '.fa.fa-arrow-circle-up',
-      down:   '.fa.fa-arrow-circle-down',
-      table:  '.pure-table.pure-table-bordered',
-      search: '.pure-form'
+    var opts = {
+      paginate: 8,
+      search: true,
+      style: {
+        up:     '.fa.fa-arrow-circle-up',
+        down:   '.fa.fa-arrow-circle-down',
+        table:  '.pure-table.pure-table-bordered.table-example',
+        input: '.search'
+      },
     }
 
     // Instantiate table controller
-    this.table = new table.controller(this.header, this.body, styles);
+    this.table = new table.controller(this.rows, opts);
   },
   
   view: function(ctrl) {

@@ -1,3 +1,13 @@
 div {
   font-family: 'Open Sans', sans-serif;
 }
+
+.search {
+  /*border-radius: 2px;*/
+  border: 1px solid #DDDDDD;
+  width: 75%;
+}
+
+.table-example {
+  width: 75%;
+}
