@@ -5,12 +5,13 @@ var tableExample = {
     var cities     = ['Stonewall', 'Arcadia', 'Berwick', 'Pineville', 'Homer', 'Covington'];
     var states     = ['Louisiana', 'Mississippi', 'Florida', 'Texas', 'Arkansas', 'Tennessee'];
 
-    this.header    = ['First Name', 'Last Name', 'Phone Number', 'City', 'State', 'Zip'];
+    this.header    = ['Index', 'First Name', 'Last Name', 'Phone Number', 'City', 'State', 'Zip'];
     this.body      = [];
 
     // Generate semi-random list of contacts
-    for(var i = 0; i < 10; i++) {
+    for(var i = 0; i < 20; i++) {
       this.body.push([
+        i,
         firstNames[Math.floor(Math.random()*(firstNames.length))],
         lastNames[Math.floor(Math.random()*(lastNames.length))],
         Math.floor(Math.random() * 9000000000 + 1000000000),

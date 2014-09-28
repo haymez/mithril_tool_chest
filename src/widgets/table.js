@@ -6,6 +6,9 @@ var table = {
     this.styles     = (opts) ? opts : {};
     this.currColumn = m.prop();
     this.reverse    = m.prop(false);
+    this.paginate   = m.prop(5);
+    this.currentPage = m.prop(1);
+
 
     this.sortFunction = function(a, b) {
       var curr = this.header.indexOf(this.currColumn());
@@ -48,9 +51,15 @@ var table = {
       this.body.forEach(searchRow);
     }.bind(this);
 
+    this.goToPage = function(page) {
+      var page = Number(page.replace(',', ''));
+      if(page != this.currentPage()) this.currentPage(page);
+    }.bind(this);
+
   },
 
   view: function(ctrl) {
+    var sliceStart = (ctrl.currentPage() - 1) * ctrl.paginate();
     var table = m('table' + ctrl.styles.table, [
       m('thead', [
         m('tr', {onclick: ctrl.filtered.sort(ctrl.sortFunction)}, ctrl.header.map(function(item, index) {
@@ -61,14 +70,25 @@ var table = {
           ]);
         }))
       ]),
-      ctrl.filtered.map(function(row, index) {
+      ctrl.filtered.slice(sliceStart, sliceStart + ctrl.paginate()).map(function(row, index) {
         return m('tr', row.map(function(td) {
           return m('td', td);
         }))
       })
     ])
+
     var inputClass = (ctrl.styles.search) ? ctrl.styles.search : ''
     var search = m('input' + inputClass, {type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
-    return [search, table];
+
+    var paginate = [];
+    for(var i = 0; i < Math.ceil(ctrl.filtered.length / ctrl.paginate()); i++) {
+      var number = i + 1;
+      if(i < Math.ceil(ctrl.filtered.length / ctrl.paginate()) - 1) number += ', ';
+      paginate.push(
+        m('span', {onclick: m.withAttr('textContent', ctrl.goToPage)}, number)
+      );
+    }
+
+    return [search, table, paginate];
   }
 }
