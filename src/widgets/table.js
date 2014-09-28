@@ -1,11 +1,11 @@
 var table = {
-
   controller: function(header, body, opts) {
-    this.header = header;
-    this.body   = body;
-    this.styles = opts;
+    this.header     = header;
+    this.body       = body;
+    this.filtered   = this.body;
+    this.styles     = (opts) ? opts : {};
     this.currColumn = m.prop();
-    this.reverse = m.prop(false);
+    this.reverse    = m.prop(false);
 
     this.sortFunction = function(a, b) {
       var curr = this.header.indexOf(this.currColumn());
@@ -25,19 +25,35 @@ var table = {
     }.bind(this);
 
     this.getArrow = function(th) {
-      if(th === this.currColumn()) {
+      var columnStyles = this.styles.up && this.styles.down;
+      if(th === this.currColumn() && columnStyles) {
         var direction = (this.reverse()) ? this.styles.down : this.styles.up;
         return m('i' + direction, {style: 'float:right;'});
       }
-      else return [];
+      return [];
+    }.bind(this);
+
+    this.filterTable = function(value) {
+      this.filtered = [];
+
+      var searchRow = function(row) {
+        for(var i = 0; i < row.length; i++) {
+          if(String(row[i]).search(new RegExp(value, 'i')) > -1) {
+            this.filtered.push(row);
+            break;
+          }
+        }
+      }.bind(this)
+
+      this.body.forEach(searchRow);
     }.bind(this);
 
   },
 
   view: function(ctrl) {
-    return m('table' + ctrl.styles.table, [
+    var table = m('table' + ctrl.styles.table, [
       m('thead', [
-        m('tr', {onclick: ctrl.body.sort(ctrl.sortFunction)}, ctrl.header.map(function(item, index) {
+        m('tr', {onclick: ctrl.filtered.sort(ctrl.sortFunction)}, ctrl.header.map(function(item, index) {
           var arrow = ctrl.getArrow(item);
           return m('th', {onclick: m.withAttr('textContent', ctrl.sortByColumn)}, [
             item,
@@ -45,11 +61,14 @@ var table = {
           ]);
         }))
       ]),
-      ctrl.body.map(function(row, index) {
+      ctrl.filtered.map(function(row, index) {
         return m('tr', row.map(function(td) {
           return m('td', td);
         }))
       })
     ])
+    var inputClass = (ctrl.styles.search) ? ctrl.styles.search : ''
+    var search = m('input' + inputClass, {type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
+    return [search, table];
   }
 }
