@@ -1,17 +1,5 @@
 var table = {};
 
-// For every table on DOM
-table.addTableListener = function() {
-  var list = document.getElementsByClassName('mithrilTable');
-  for(var i = 0; i < list.length; i++) {
-    console.log(list[i]);
-    table.addEventListener('scroll', function(evt) {
-      table.state.pageY = Math.max(evt.pageY || window.pageYOffset, 0);
-      // table.state.divHeight = table.
-    });
-  }
-}
-
 table.controller = function(rows, opts) {
   this.header      = rows.splice(0, 1)[0];
   this.body        = rows;
@@ -23,16 +11,31 @@ table.controller = function(rows, opts) {
   this.currColumn  = m.prop();
   this.reverse     = m.prop(false);
   this.currentPage = m.prop(1);
+  this.infinite    = m.prop(!!opts.infinite);
 
+  this.divY        = m.prop(0);
+  this.divHeight   = m.prop(window.innerHeight);
+  this.rowHeight   = m.prop(30);
+
+
+  this.updateState = function(evt) {
+    this.divHeight(evt.target.offsetHeight);
+    this.divY(evt.target.scrollTop);
+    for(var i = 0; i < evt.target.children.length; i++) {
+      if(evt.target.children[i].tagName === 'TABLE') {
+        var table = evt.target.children[i]
+        this.rowHeight(table.children[table.children.length-1].offsetHeight)
+      }
+    }
+    m.redraw();
+  }.bind(this);
 
   this.sortFunction = function(a, b) {
     var curr = this.header.indexOf(this.currColumn());
     if(a[curr] === b[curr]) return 0;
     else {
-      if(this.reverse())
-        return (a[curr] < b[curr]) ? 1 : -1;
-      else
-        return (a[curr] < b[curr]) ? -1 : 1;
+      if(this.reverse()) return (a[curr] < b[curr]) ? 1 : -1;
+      else return (a[curr] < b[curr]) ? -1 : 1;
     }
   }.bind(this);
 
@@ -74,28 +77,65 @@ table.controller = function(rows, opts) {
 };
 
 table.view = function(ctrl) {
+  var table = [];
   var sliceStart = (ctrl.currentPage() - 1) * ctrl.paginate();
-  var table = m('table' + ctrl.styles.table, [
-    m('thead', [
-      m('tr', {onclick: ctrl.filtered.sort(ctrl.sortFunction)}, ctrl.header.map(function(item, index) {
-        var arrow = ctrl.getArrow(item);
-        return m('th', {onclick: m.withAttr('textContent', ctrl.sortByColumn)}, [
-          item,
-          arrow,
-        ]);
-      }))
-    ]),
-    ctrl.filtered.slice(sliceStart, sliceStart + ctrl.paginate()).map(function(row, index) {
-      return m('tr', row.map(function(td) {
-        return m('td', td);
-      }))
-    })
-  ])
+
+  var begin = ctrl.divY() / ctrl.rowHeight() | 0;
+  var end = begin + (ctrl.divHeight() / ctrl.rowHeight() | 0 + 2);
+  var offset = ctrl.divY() % ctrl.rowHeight();
+
+  if(ctrl.infinite()) {
+    table = m('div', {style: {height: ctrl.filtered.length * ctrl.rowHeight() + 'px'}}, [
+      m('table' + ctrl.styles.table,
+        {
+          style: {
+            top: ctrl.divY() + 'px',
+            position: 'relative',
+          }
+        },
+        [
+          m('thead', [
+            m('tr', {onclick: ctrl.filtered.sort(ctrl.sortFunction)}, ctrl.header.map(function(item, index) {
+              var arrow = ctrl.getArrow(item);
+              return m('th', {onclick: m.withAttr('textContent', ctrl.sortByColumn)}, [item, arrow]);
+            }))
+          ]),
+          ctrl.filtered.slice(begin, end).map(function(row, index) {
+            return m('tr', row.map(function(td) {
+              return m('td', td);
+            }))
+          })
+      ])
+    ]);
+  } 
+  else {
+    table = m('table' + ctrl.styles.table, [
+      m('thead', [
+        m('tr', {onclick: ctrl.filtered.sort(ctrl.sortFunction)}, ctrl.header.map(function(item, index) {
+          var arrow = ctrl.getArrow(item);
+          return m('th', {onclick: m.withAttr('textContent', ctrl.sortByColumn)}, [
+            item,
+            arrow,
+          ]);
+        }))
+      ]),
+      ctrl.filtered.slice(sliceStart, sliceStart + ctrl.paginate()).map(function(row, index) {
+        return m('tr', row.map(function(td) {
+          return m('td', td);
+        }))
+      })
+    ])
+  }
 
   var inputClass = (ctrl.styles.input) ? ctrl.styles.input : ''
   var search = [];
-  if(ctrl.search)
-    search = m('input' + inputClass, {type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
+  if(ctrl.search) {
+    search = [];
+    if(ctrl.infinite()) 
+      search = m('input' + inputClass, {style: {position: 'relative', top: ctrl.divY()+'px'}, type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
+    else
+      search = m('input' + inputClass, {type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
+  }
 
   var paginate    = [];
   var totalPages  = Math.ceil(ctrl.filtered.length / ctrl.paginate());
@@ -117,7 +157,13 @@ table.view = function(ctrl) {
     }
 
   return [
-    m('.mithril-table', {style: ['height:', ctrl.height(), 'px;overflow-y:auto;overflow-x:hidden'].join('')}, [search, table]),
+    m('.mithril-table',
+      {
+        style: ['height:', ctrl.height(), 'px;overflow-y:auto;overflow-x:hidden'].join(''), 
+        onscroll: ctrl.updateState
+      },
+      [search, table]
+    ),
     paginate,
   ];
 }

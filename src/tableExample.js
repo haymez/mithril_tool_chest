@@ -10,7 +10,7 @@ var tableExample = {
     ];
 
     // Generate semi-random list of contacts
-    for(var i = 0; i < 100; i++) {
+    for(var i = 0; i < 5000; i++) {
       this.rows.push([
         i,
         firstNames[Math.floor(Math.random()*(firstNames.length))],
@@ -25,7 +25,8 @@ var tableExample = {
     // Styles for table and search bar
     var opts = {
       // paginate: 8,
-      height: 500,
+      height: 400,
+      infinite: true,
       search: true,
       style: {
         up:     '.fa.fa-arrow-circle-up',
