@@ -117,8 +117,7 @@ table.view = function(ctrl) {
     }
 
   return [
-    search,
-    m('.mithrilTable', {style: ['height:', ctrl.height(), ';overflow-y:hidden'].join('')}, table),
+    m('.mithril-table', {style: ['height:', ctrl.height(), 'px;overflow-y:auto;overflow-x:hidden'].join('')}, [search, table]),
     paginate,
   ];
 }

@@ -5,9 +5,13 @@ div {
 .search {
   /*border-radius: 2px;*/
   border: 1px solid #DDDDDD;
-  width: 75%;
+  width: 100%;
 }
 
 .table-example {
+  width: 100%;
+}
+
+.mithril-table {
   width: 75%;
 }

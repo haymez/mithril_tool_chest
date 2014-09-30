@@ -25,7 +25,7 @@ var tableExample = {
     // Styles for table and search bar
     var opts = {
       // paginate: 8,
-      scroll: 100,
+      height: 500,
       search: true,
       style: {
         up:     '.fa.fa-arrow-circle-up',
