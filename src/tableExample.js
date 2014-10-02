@@ -10,7 +10,7 @@ var tableExample = {
     ];
 
     // Generate semi-random list of contacts
-    for(var i = 0; i < 5000; i++) {
+    for(var i = 0; i < 500; i++) {
       this.rows.push([
         i,
         firstNames[Math.floor(Math.random()*(firstNames.length))],

@@ -1,6 +1,6 @@
 var table = {};
 
-table.controller = function(rows, opts) {
+table.Table = function(rows, opts) {
   this.header      = rows.splice(0, 1)[0];
   this.body        = rows;
   this.filtered    = this.body;
@@ -12,12 +12,10 @@ table.controller = function(rows, opts) {
   this.reverse     = m.prop(false);
   this.currentPage = m.prop(1);
   this.infinite    = m.prop(!!opts.infinite);
-
   this.divY        = m.prop(0);
   this.divHeight   = m.prop(window.innerHeight);
   this.rowHeight   = m.prop(30);
-
-
+  
   this.updateState = function(evt) {
     this.divHeight(evt.target.offsetHeight);
     this.divY(evt.target.scrollTop);
@@ -39,6 +37,11 @@ table.controller = function(rows, opts) {
     }
   }.bind(this);
 
+}
+
+table.controller = function(rows, opts) {
+  this.state = new table.Table(rows, opts);
+
   this.sortByColumn = function(value) {
     if(value === this.currColumn()) this.reverse(!this.reverse());
     else this.reverse(false);
@@ -46,8 +49,8 @@ table.controller = function(rows, opts) {
   }.bind(this);
 
   this.getArrow = function(th) {
-    var columnStyles = this.styles.up && this.styles.down;
-    if(th === this.currColumn() && columnStyles) {
+    var columnStyles = this.state.styles.up && this.state.styles.down;
+    if(th === this.state.currColumn() && columnStyles) {
       var direction = (this.reverse()) ? this.styles.down : this.styles.up;
       return m('i' + direction, {style: 'float:right;'});
     }
@@ -65,7 +68,6 @@ table.controller = function(rows, opts) {
         }
       }
     }.bind(this)
-
     this.body.forEach(searchRow);
   }.bind(this);
 
@@ -77,30 +79,29 @@ table.controller = function(rows, opts) {
 };
 
 table.view = function(ctrl) {
-  var table = [];
-  var sliceStart = (ctrl.currentPage() - 1) * ctrl.paginate();
+  var table      = [];
+  var sliceStart = (ctrl.state.currentPage() - 1) * ctrl.state.paginate();
+  var begin      = ctrl.state.divY() / ctrl.state.rowHeight() | 0;
+  var end        = begin + (ctrl.state.divHeight() / ctrl.state.rowHeight() | 0 + 2);
+  var offset     = ctrl.state.divY() % ctrl.state.rowHeight();
 
-  var begin = ctrl.divY() / ctrl.rowHeight() | 0;
-  var end = begin + (ctrl.divHeight() / ctrl.rowHeight() | 0 + 2);
-  var offset = ctrl.divY() % ctrl.rowHeight();
-
-  if(ctrl.infinite()) {
-    table = m('div', {style: {height: ctrl.filtered.length * ctrl.rowHeight() + 'px'}}, [
-      m('table' + ctrl.styles.table,
+  if(ctrl.state.infinite()) {
+    table = m('div', {style: {height: ctrl.state.filtered.length * ctrl.state.rowHeight() + 'px'}}, [
+      m('table' + ctrl.state.styles.table,
         {
           style: {
-            top: ctrl.divY() + 'px',
+            top: ctrl.state.divY() + 'px',
             position: 'relative',
           }
         },
         [
           m('thead', [
-            m('tr', {onclick: ctrl.filtered.sort(ctrl.sortFunction)}, ctrl.header.map(function(item, index) {
+            m('tr', {onclick: ctrl.state.filtered.sort(ctrl.sortFunction)}, ctrl.state.header.map(function(item, index) {
               var arrow = ctrl.getArrow(item);
               return m('th', {onclick: m.withAttr('textContent', ctrl.sortByColumn)}, [item, arrow]);
             }))
           ]),
-          ctrl.filtered.slice(begin, end).map(function(row, index) {
+          ctrl.state.filtered.slice(begin, end).map(function(row, index) {
             return m('tr', row.map(function(td) {
               return m('td', td);
             }))
@@ -127,8 +128,8 @@ table.view = function(ctrl) {
     ])
   }
 
-  var inputClass = (ctrl.styles.input) ? ctrl.styles.input : ''
-  var search = [];
+  var inputClass = (ctrl.state.styles.input) ? ctrl.state.styles.input : ''
+  var search     = [];
   if(ctrl.search) {
     search = [];
     if(ctrl.infinite()) 
@@ -138,10 +139,10 @@ table.view = function(ctrl) {
   }
 
   var paginate    = [];
-  var totalPages  = Math.ceil(ctrl.filtered.length / ctrl.paginate());
-  var startNumber = (ctrl.currentPage() - 5 < 0) ? 0 : ctrl.currentPage() - 5;
+  var totalPages  = Math.ceil(ctrl.state.filtered.length / ctrl.state.paginate());
+  var startNumber = (ctrl.state.currentPage() - 5 < 0) ? 0 : ctrl.state.currentPage() - 5;
   var endNumber   = (startNumber + 10 > totalPages) ? totalPages : startNumber + 10;
-  if(ctrl.paginate() < ctrl.filtered.length) 
+  if(ctrl.state.paginate() < ctrl.state.filtered.length) 
     for(var i = startNumber; i < endNumber; i++) {
       var number = i + 1;
       if(startNumber > 1 && i === startNumber) paginate.push('... ');
@@ -159,8 +160,8 @@ table.view = function(ctrl) {
   return [
     m('.mithril-table',
       {
-        style: ['height:', ctrl.height(), 'px;overflow-y:auto;overflow-x:hidden'].join(''), 
-        onscroll: ctrl.updateState
+        style: ['height:', ctrl.state.height(), 'px;overflow-y:auto;overflow-x:hidden'].join(''), 
+        onscroll: ctrl.state.updateState
       },
       [search, table]
     ),
