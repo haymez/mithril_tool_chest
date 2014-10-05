@@ -1,4 +1,11 @@
-var rootLayout = function(content) {
+var rootLayout = {}
+
+rootLayout.fixNav = function(evt) {
+  console.log(evt);
+}
+
+rootLayout.view = function(content) {
+  var header = m('.big-header', 'Mithril Widgets');
   var nav = m('nav.nav', [
     m('ul', [
       m('li', [
@@ -18,6 +25,6 @@ var rootLayout = function(content) {
     ])
   ])
 
-  return [nav, m('.content', content)];
+  return [header, nav, m('.content', content)];
 
 }

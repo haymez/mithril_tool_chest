@@ -1,31 +1,19 @@
 // Code for mithril widgets
 
 var home = {
-  controller: function() {
-
-  },
+  controller: function() {},
 
   view: function(ctrl) {
-    var table = m('div', [
-      m('h1', 'Mithril Widgets'),
-      m('hr'),
-      m('p', 'Click on one of the examples below to sample a widget.'),
-      m('table.pure-table', [
-        m('thead', [
-          m('tr', [
-            m('th', 'Widget'),
-            m('th', 'Link')
-          ])
-        ]),
-        m('tr', [
-          m('td', 'Table'),
-          m('td', [
-            m('a[href="/table"]', {config: m.route}, 'Link')
-          ])
-        ])
-      ])
-    ])
-    return rootLayout(table);
+    var intro = m('div', [
+      m('p.description', [
+        m('span', 'A collection of components to be used with any '),
+        m('strong', 'Mithril.js'),
+        m('span', ' project.')
+      ]),
+      m('.medium-header', 'Current Features:')
+    ]);
+
+    return rootLayout.view(intro);
   }
   
 };

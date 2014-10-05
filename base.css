@@ -1,9 +1,8 @@
-div {
+div, nav {
   font-family: 'Open Sans', sans-serif;
 }
 
 .search {
-  /*border-radius: 2px;*/
   border: 1px solid #DDDDDD;
   width: 100%;
 }
@@ -14,4 +13,26 @@ div {
 
 .mithril-table {
   width: 75%;
+}
+
+.big-header {
+  background-color: #57CC75;
+  font-size: 4em;
+  text-align: center;
+  border-bottom: 1px solid black;
+}
+
+.medium-header {
+  font-size: 36pt;
+}
+
+p.description {
+  padding-left: 50%;
+  font-size: 18pt;
+  margin: 2% 0 0 2%;
+}
+
+.content {
+  margin: 0 auto 0 auto;
+  width: 90%;
 }

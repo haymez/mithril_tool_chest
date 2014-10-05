@@ -25,7 +25,7 @@ var tableExample = {
     // Styles for table and search bar
     var opts = {
       // paginate: 8,
-      height: 400,
+      height: 500,
       infinite: true,
       search: true,
       style: {
@@ -46,6 +46,6 @@ var tableExample = {
       table.view(ctrl.table),
     ]);
 
-    return rootLayout(example)
+    return rootLayout.view(example)
   }
 };
