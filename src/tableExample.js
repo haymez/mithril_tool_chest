@@ -41,9 +41,11 @@ var tableExample = {
   },
   
   view: function(ctrl) {
-    return m('div', [
+    var example = m('div', [
       m('h1', 'Table Example'),
       table.view(ctrl.table),
     ]);
+
+    return rootLayout(example)
   }
 };

@@ -6,7 +6,7 @@ var home = {
   },
 
   view: function(ctrl) {
-    return m('div', [
+    var table = m('div', [
       m('h1', 'Mithril Widgets'),
       m('hr'),
       m('p', 'Click on one of the examples below to sample a widget.'),
@@ -25,6 +25,7 @@ var home = {
         ])
       ])
     ])
+    return rootLayout(table);
   }
   
 };
