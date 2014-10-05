@@ -4,11 +4,12 @@ html, body { height: 100%; width: 100%; margin: 0; }
   nav.nav {
     height: 2.5em;
     width: 100%;
-    /*background-color: #DFDFDF;*/
-    background-color: #DFFDBC;
+    z-index: 1;
+    background-color: #A7A7A7;
   }
 
   nav.stuck {
+    top: 0;
     position: fixed;
   }
 
@@ -37,7 +38,7 @@ html, body { height: 100%; width: 100%; margin: 0; }
     float: left;
     height: 100%;
     padding: 0 2% 0 2%;
-    background-color: #DFFDBC;
+    background-color: #BABABA;
     -webkit-transition: background-color 250ms linear, color 250ms linear;
     border-right: 1px solid white;
     color: black;
@@ -49,19 +50,19 @@ html, body { height: 100%; width: 100%; margin: 0; }
 
   a.active {
     /*background-color: #878787 !important;*/
-    background-color: #91A47A !important;
+    background-color: #474747 !important;
     color: #FFFFFF;
   }
 
   a.nav-link:hover {
     /*background-color: #A9A9A9;*/
-    background-color: #B5CD98;
+    background-color: #808080;
     color: #FFFFFF;
   }
 
   a.nav-link:active {
     /*background-color: #878787;*/
-    background-color: #91A47A;
+    background-color: #474747;
     color: #FFFFFF;
   }
 }

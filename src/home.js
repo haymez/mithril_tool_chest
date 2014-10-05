@@ -13,7 +13,12 @@ var home = {
       m('.medium-header', 'Current Features:')
     ]);
 
-    return rootLayout.view(intro);
+    var filler = [];
+    for(var i = 0; i < 100; i++) {
+      filler.push(m('li', 'Filler Stuff!'));
+    }
+
+    return rootLayout.view([intro, m('ul', filler)]);
   }
   
 };

@@ -2,6 +2,11 @@ div, nav {
   font-family: 'Open Sans', sans-serif;
 }
 
+body {
+  background-image: url('dark.png');
+  background-repeat: repeat;
+}
+
 .search {
   border: 1px solid #DDDDDD;
   width: 100%;
@@ -16,7 +21,9 @@ div, nav {
 }
 
 .big-header {
-  background-color: #57CC75;
+  /*background-color: #CACACA;*/
+  background: -webkit-linear-gradient(gray, black);
+  color: white;
   font-size: 4em;
   text-align: center;
   border-bottom: 1px solid black;
@@ -33,6 +40,7 @@ p.description {
 }
 
 .content {
+  color: #FFFFFF;
   margin: 0 auto 0 auto;
   width: 90%;
 }

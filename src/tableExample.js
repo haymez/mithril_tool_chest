@@ -25,7 +25,7 @@ var tableExample = {
     // Styles for table and search bar
     var opts = {
       // paginate: 8,
-      height: 500,
+      height: 600,
       infinite: true,
       search: true,
       style: {
