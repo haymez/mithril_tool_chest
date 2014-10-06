@@ -4,18 +4,18 @@ rootLayout.navState = {
   top: null,
 }
 
-window.addEventListener('scroll', function(evt) {
-  var nav                 = document.getElementById('navbar');
-  rootLayout.navState.top = rootLayout.navState.top || (rootLayout.navState.top = nav.offsetTop);
-  var windowTop           = window.pageYOffset;
+// window.addEventListener('scroll', function(evt) {
+//   var nav                 = document.getElementById('navbar');
+//   rootLayout.navState.top = rootLayout.navState.top || (rootLayout.navState.top = nav.offsetTop);
+//   var windowTop           = window.pageYOffset;
 
-  if(windowTop >= rootLayout.navState.top) {
-    if(nav.className.indexOf('stuck') < 0) nav.classList.toggle('stuck');
-  }
-  else {
-    if(nav.className.indexOf('stuck') > -1) nav.classList.toggle('stuck');
-  }
-});
+//   if(windowTop >= rootLayout.navState.top) {
+//     if(nav.className.indexOf('stuck') < 0) nav.classList.toggle('stuck');
+//   }
+//   else {
+//     if(nav.className.indexOf('stuck') > -1) nav.classList.toggle('stuck');
+//   }
+// });
 
 rootLayout.view = function(content) {
   var header = m('.big-header', 'Mithril Widgets');
@@ -26,7 +26,7 @@ rootLayout.view = function(content) {
           href: '/', 
           config: m.route, 
           class: (m.route() === '/') ? 'active' : ''
-        }, 'Mithril Widgets')
+        }, 'Overview')
       ]),
       m('li', [
         m('a.nav-link', {

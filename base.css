@@ -21,8 +21,6 @@ body {
 }
 
 .big-header {
-  /*background-color: #CACACA;*/
-  background: -webkit-linear-gradient(gray, black);
   color: white;
   font-size: 4em;
   text-align: center;
@@ -33,11 +31,45 @@ body {
   font-size: 36pt;
 }
 
-p.description {
-  padding-left: 50%;
-  font-size: 18pt;
-  margin: 2% 0 0 2%;
+.small-header {
+  font-size: 24pt;
 }
+
+.mithril-emphasis {
+  border-bottom: 1px solid #FFFFFF;
+}
+
+.medium-section {
+  width: 50%;
+}
+
+p.description {
+  font-size: 18pt;
+  margin: 0;
+}
+
+p.small-description {
+  font-size: 16pt;
+  margin: 0;
+}
+
+.comment {
+  padding-left: 50%;
+}
+
+.mithril-feature {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 75%;
+  background-color: #1C1C1C;
+  padding: 5px;
+  border-bottom: 1px solid #FFFFFF;
+  border-left: 1px solid #FFFFFF;
+  border-radius: 5px;
+}
+
+
 
 .content {
   color: #FFFFFF;
