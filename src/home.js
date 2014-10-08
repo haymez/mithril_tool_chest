@@ -15,19 +15,20 @@ var home = {
         ]),
       ]),
       m('.comment', [
-        m('.small-header', 'No other dependancies'),
-        m('p.small-description', "Because this library was built using pure javascript and Mithril, you don't need to \
-          include any other libraries for it to work."),
+        m('.small-header', 'Dependencies'),
+        m('p.small-description', "Because this library was built using pure javascript and Mithril, you \
+          don't need to include any other libraries for it to work."),
       ]),
       m('.medium-header', 'Current Features:'),
       m('ul.mithril-feature', [
         m('li', [
-          m('.small-header.mithril-emphasis', 'Table'),
-          m('p.small-description', 'This table supports both pagination and infinite scrolling. \
-            simply pass in an options hash with the desired settings along with a 2 dimensional array \
-            consisting of your header row and data and the table will take care of the rest.')
+          m('a.small-header', {href: '/table', config: m.route}, 'Table'),
+          m('p.small-description', 'Supports pagination, infinite scrolling, row filtering\
+            , and column sorting. simply pass in an options hash with the desired settings along with a 2 \
+            dimensional array consisting of your header row and data and the table will take care of the rest.')
         ])
-      ])
+      ]),
+      m('.mithril-footer', 'Mithril Widgets')
     ]);
 
     var filler = [];
