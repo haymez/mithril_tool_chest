@@ -43,15 +43,15 @@ table.controller = function(rows, opts) {
   this.state = new table.Table(rows, opts);
 
   this.sortByColumn = function(value) {
-    if(value === this.currColumn()) this.reverse(!this.reverse());
-    else this.reverse(false);
-    this.currColumn(value);
+    if(value === this.state.currColumn()) this.state.reverse(!this.state.reverse());
+    else this.state.reverse(false);
+    this.state.currColumn(value);
   }.bind(this);
 
   this.getArrow = function(th) {
     var columnStyles = this.state.styles.up && this.state.styles.down;
     if(th === this.state.currColumn() && columnStyles) {
-      var direction = (this.reverse()) ? this.styles.down : this.styles.up;
+      var direction = (this.state.reverse()) ? this.state.styles.down : this.state.styles.up;
       return m('i' + direction, {style: 'float:right;'});
     }
     return [];
