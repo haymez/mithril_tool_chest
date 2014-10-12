@@ -1,10 +1,10 @@
 {
-  "name": "mithril_widgets",
+  "name": "mithril_tool_chest",
   "version": "0.0.1",
   "description": "A collection of widgets or components to be used with mithril.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/haymez/mithril_widgets.git"
+    "url": "https://github.com/haymez/mithril_tool_chest.git"
   },
   "main": "index.js",
   "scripts": {

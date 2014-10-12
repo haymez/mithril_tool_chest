@@ -1,5 +1,5 @@
-// m.route.mode('search');
 m.route(document.body, '/', {
   '/':      home,
+  '/features': features,
   '/table': tableExample,
 });
