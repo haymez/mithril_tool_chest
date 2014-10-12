@@ -4,21 +4,10 @@ rootLayout.navState = {
   top: null,
 }
 
-// window.addEventListener('scroll', function(evt) {
-//   var nav                 = document.getElementById('navbar');
-//   rootLayout.navState.top = rootLayout.navState.top || (rootLayout.navState.top = nav.offsetTop);
-//   var windowTop           = window.pageYOffset;
-
-//   if(windowTop >= rootLayout.navState.top) {
-//     if(nav.className.indexOf('stuck') < 0) nav.classList.toggle('stuck');
-//   }
-//   else {
-//     if(nav.className.indexOf('stuck') > -1) nav.classList.toggle('stuck');
-//   }
-// });
-
 rootLayout.view = function(content) {
-  var header = m('.big-header', 'Mithril Widgets');
+  var header = m('.base-big-banner', [
+    m('h1', 'Mithril Tool Chest'),
+  ]);
   var nav = m('nav.nav#navbar', [
     m('ul', [
       m('li', [
@@ -27,6 +16,13 @@ rootLayout.view = function(content) {
           config: m.route, 
           class: (m.route() === '/') ? 'active' : ''
         }, 'Overview')
+      ]),
+      m('li', [
+        m('a.nav-link', {
+          href: '/features', 
+          config: m.route,
+          class: (m.route() === '/features') ? 'active' : ''
+        }, 'Features')
       ]),
       m('li', [
         m('a.nav-link', {
