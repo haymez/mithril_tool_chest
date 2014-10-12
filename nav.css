@@ -5,7 +5,8 @@ html, body { height: 100%; width: 100%; margin: 0; }
     height: 2.5em;
     width: 100%;
     z-index: 1;
-    background-color: #161616;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E6E6E6;
   }
 
   nav.stuck {
@@ -39,21 +40,21 @@ html, body { height: 100%; width: 100%; margin: 0; }
     height: 100%;
     padding: 0 2% 0 2%;
     transition: color 250ms linear, border-color 250ms ease;
-    color: #FFFFFF;
+    color: #000000;
     text-align: center;
-    line-height: 2.3em;
+    line-height: 1.8em;
     text-decoration: none;
-    font-size: 14pt;
-    border-bottom: 1px solid rgba(255,255,255,0.0);
+    font-size: 18pt;
+    border-bottom: 1px solid rgba(0,0,0,0.0);
   }
 
   a.active {
-    color: #8E8E8E;
-    border-bottom: 1px solid rgba(255,255,255,1);
+    color: #727272;
+    border-bottom: 1px solid rgba(0,0,0,1);
   }
 
   a.nav-link:hover {
-    color: #8E8E8E;
-    border-bottom: 1px solid rgba(255,255,255,1);
+    color: #727272;
+    border-bottom: 1px solid rgba(0,0,0,1);
   }
 }
