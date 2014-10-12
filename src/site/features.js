@@ -13,7 +13,7 @@ features.view = function(ctrl) {
 
   var content = m('.base-well', [
     m('h1', 'Features Overview:'),
-    m('.base-well', [
+    m('.base-well.base-well-small', [
       m('h2', 'Table'),
       m('p.small-description', tableDescription),
       m('span', 'Check out the example page: '),

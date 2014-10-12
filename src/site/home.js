@@ -12,8 +12,8 @@ var home = {
         m('p.description', [
           m('span', 'Tool Chest is a collection of components to be used with any '),
           m('strong', 'Mithril.js'),
-          m('span', ' project. These tools are being built with an effort to make them as minimilistic as \
-            possible while still providing helpful functionality.'),
+          m('span', ' project. These tools are being built with an effort to make them as \
+            minimilistic as possible while still providing helpful functionality.'),
         ]),
         m('a.base-btn.base-btn-success',
           {href: 'https://github.com/haymez/mithril_tool_chest'},
