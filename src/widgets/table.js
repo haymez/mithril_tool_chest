@@ -37,16 +37,17 @@ table.Table = function(rows, opts) {
     }
   }.bind(this);
 
+  this.sortByColumn = function(value) {
+    if(value === this.currColumn()) this.reverse(!this.reverse());
+    else this.reverse(false);
+    this.currColumn(value);
+  }.bind(this);
+
 }
 
 table.controller = function(rows, opts) {
   this.state = new table.Table(rows, opts);
 
-  this.sortByColumn = function(value) {
-    if(value === this.state.currColumn()) this.state.reverse(!this.state.reverse());
-    else this.state.reverse(false);
-    this.state.currColumn(value);
-  }.bind(this);
 
   this.getArrow = function(th) {
     var columnStyles = this.state.styles.up && this.state.styles.down;
@@ -58,17 +59,17 @@ table.controller = function(rows, opts) {
   }.bind(this);
 
   this.filterTable = function(value) {
-    this.filtered = [];
+    this.state.filtered = [];
 
     var searchRow = function(row) {
       for(var i = 0; i < row.length; i++) {
         if(String(row[i]).search(new RegExp(value, 'i')) > -1) {
-          this.filtered.push(row);
+          this.state.filtered.push(row);
           break;
         }
       }
     }.bind(this)
-    this.body.forEach(searchRow);
+    this.state.body.forEach(searchRow);
   }.bind(this);
 
   this.goToPage = function(page) {
@@ -86,7 +87,13 @@ table.view = function(ctrl) {
   var offset     = ctrl.state.divY() % ctrl.state.rowHeight();
 
   if(ctrl.state.infinite()) {
-    table = m('div', {style: {height: ctrl.state.filtered.length * ctrl.state.rowHeight() + 'px'}}, [
+    table = m('div', 
+    {
+      style: {
+        height: ctrl.state.filtered.length * ctrl.state.rowHeight() + 'px',
+      }
+    },
+    [
       m('table' + ctrl.state.styles.table,
         {
           style: {
@@ -96,9 +103,9 @@ table.view = function(ctrl) {
         },
         [
           m('thead', [
-            m('tr', {onclick: ctrl.state.filtered.sort(ctrl.sortFunction)}, ctrl.state.header.map(function(item, index) {
+            m('tr', {onclick: ctrl.state.filtered.sort(ctrl.state.sortFunction)}, ctrl.state.header.map(function(item, index) {
               var arrow = ctrl.getArrow(item);
-              return m('th', {onclick: m.withAttr('textContent', ctrl.sortByColumn)}, [item, arrow]);
+              return m('th', {onclick: m.withAttr('textContent', ctrl.state.sortByColumn)}, [item, arrow]);
             }))
           ]),
           ctrl.state.filtered.slice(begin, end).map(function(row, index) {
@@ -112,9 +119,9 @@ table.view = function(ctrl) {
   else {
     table = m('table' + ctrl.styles.table, [
       m('thead', [
-        m('tr', {onclick: ctrl.filtered.sort(ctrl.sortFunction)}, ctrl.header.map(function(item, index) {
+        m('tr', {onclick: ctrl.filtered.sort(ctrl.state.sortFunction)}, ctrl.header.map(function(item, index) {
           var arrow = ctrl.getArrow(item);
-          return m('th', {onclick: m.withAttr('textContent', ctrl.sortByColumn)}, [
+          return m('th', {onclick: m.withAttr('textContent', ctrl.state.sortByColumn)}, [
             item,
             arrow,
           ]);
@@ -130,10 +137,10 @@ table.view = function(ctrl) {
 
   var inputClass = (ctrl.state.styles.input) ? ctrl.state.styles.input : ''
   var search     = [];
-  if(ctrl.search) {
+  if(ctrl.state.search) {
     search = [];
-    if(ctrl.infinite()) 
-      search = m('input' + inputClass, {style: {position: 'relative', top: ctrl.divY()+'px'}, type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
+    if(ctrl.state.infinite()) 
+      search = m('input' + inputClass, {style: {position: 'relative', top: ctrl.state.divY()+'px'}, type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
     else
       search = m('input' + inputClass, {type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
   }

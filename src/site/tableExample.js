@@ -41,7 +41,7 @@ var tableExample = {
   },
   
   view: function(ctrl) {
-    var example = m('div', [
+    var example = m('.base-well', [
       m('h1', 'Table Example'),
       table.view(ctrl.table),
     ]);
