@@ -4,28 +4,28 @@ table.Table = function(rows, opts) {
   this.header      = rows.splice(0, 1)[0];
   this.body        = rows;
   this.filtered    = this.body;
-  this.styles      = (opts.style) ? opts.style : {};
+  this.classNames  = (opts.classNames) ? opts.classNames : {};
   this.paginate    = (opts.paginate) ? m.prop(opts.paginate) : m.prop(this.body.length);
   this.height      = (opts.height) ? m.prop(opts.height) : m.prop();
   this.search      = (opts.search) ? opts.search : false;
   this.currColumn  = m.prop();
   this.reverse     = m.prop(false);
   this.currentPage = m.prop(1);
-  this.infinite    = m.prop(!!opts.infinite);
+  this.infinite    = m.prop(opts.infinite);
   this.divY        = m.prop(0);
   this.divHeight   = m.prop(window.innerHeight);
   this.rowHeight   = m.prop(30);
   
+  // Listen for scroll 
   this.updateState = function(evt) {
     this.divHeight(evt.target.offsetHeight);
     this.divY(evt.target.scrollTop);
     for(var i = 0; i < evt.target.children.length; i++) {
       if(evt.target.children[i].tagName === 'TABLE') {
         var table = evt.target.children[i]
-        this.rowHeight(table.children[table.children.length-1].offsetHeight)
+        this.rowHeight(table.children[table.children.length-1].offsetHeight) // Get row height
       }
     }
-    m.redraw();
   }.bind(this);
 
   this.sortFunction = function(a, b) {
@@ -50,9 +50,9 @@ table.controller = function(rows, opts) {
 
 
   this.getArrow = function(th) {
-    var columnStyles = this.state.styles.up && this.state.styles.down;
+    var columnStyles = this.state.classNames.up && this.state.classNames.down;
     if(th === this.state.currColumn() && columnStyles) {
-      var direction = (this.state.reverse()) ? this.state.styles.down : this.state.styles.up;
+      var direction = (this.state.reverse()) ? this.state.classNames.down : this.state.classNames.up;
       return m('i' + direction, {style: 'float:right;'});
     }
     return [];
@@ -74,7 +74,7 @@ table.controller = function(rows, opts) {
 
   this.goToPage = function(page) {
     var page = Number(page.replace(',', ''));
-    if(page != this.currentPage()) this.currentPage(page);
+    if(page != this.state.currentPage()) this.state.currentPage(page);
   }.bind(this);
 
 };
@@ -82,9 +82,10 @@ table.controller = function(rows, opts) {
 table.view = function(ctrl) {
   var table      = [];
   var sliceStart = (ctrl.state.currentPage() - 1) * ctrl.state.paginate();
+  var divHeight  = ctrl.state.filtered.length * ctrl.state.rowHeight()
   var begin      = ctrl.state.divY() / ctrl.state.rowHeight() | 0;
   var end        = begin + (ctrl.state.divHeight() / ctrl.state.rowHeight() | 0 + 2);
-  var offset     = ctrl.state.divY() % ctrl.state.rowHeight();
+  var offset     = end > ctrl.state.filtered.length ? -(ctrl.state.divY() % ctrl.state.rowHeight()) : 0;
 
   if(ctrl.state.infinite()) {
     table = m('div', 
@@ -94,10 +95,11 @@ table.view = function(ctrl) {
       }
     },
     [
-      m('table' + ctrl.state.styles.table,
+      m('table' + ctrl.state.classNames.table,
         {
           style: {
-            top: ctrl.state.divY() + 'px',
+            top: ctrl.state.divY() + offset + 'px',
+            width: '100%',
             position: 'relative',
           }
         },
@@ -117,9 +119,9 @@ table.view = function(ctrl) {
     ]);
   } 
   else {
-    table = m('table' + ctrl.styles.table, [
+    table = m('table' + ctrl.state.classNames.table, {style:{width:'100%'}}, [
       m('thead', [
-        m('tr', {onclick: ctrl.filtered.sort(ctrl.state.sortFunction)}, ctrl.header.map(function(item, index) {
+        m('tr', {onclick: ctrl.state.filtered.sort(ctrl.state.sortFunction)}, ctrl.state.header.map(function(item, index) {
           var arrow = ctrl.getArrow(item);
           return m('th', {onclick: m.withAttr('textContent', ctrl.state.sortByColumn)}, [
             item,
@@ -127,7 +129,7 @@ table.view = function(ctrl) {
           ]);
         }))
       ]),
-      ctrl.filtered.slice(sliceStart, sliceStart + ctrl.paginate()).map(function(row, index) {
+      ctrl.state.filtered.slice(sliceStart, sliceStart + ctrl.state.paginate()).map(function(row, index) {
         return m('tr', row.map(function(td) {
           return m('td', td);
         }))
@@ -135,14 +137,27 @@ table.view = function(ctrl) {
     ])
   }
 
-  var inputClass = (ctrl.state.styles.input) ? ctrl.state.styles.input : ''
+  var inputClass = (ctrl.state.classNames.input) ? ctrl.state.classNames.input : ''
   var search     = [];
   if(ctrl.state.search) {
     search = [];
     if(ctrl.state.infinite()) 
-      search = m('input' + inputClass, {style: {position: 'relative', top: ctrl.state.divY()+'px'}, type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
+      search = m('input' + inputClass,
+      {
+        style: {
+          width: '99.5%',
+          position: 'relative',
+          top: ctrl.state.divY()+'px'
+        },
+        type: 'text',
+        onkeyup: m.withAttr('value', ctrl.filterTable)
+      });
     else
-      search = m('input' + inputClass, {type: 'text', onkeyup: m.withAttr('value', ctrl.filterTable)});
+      search = m('input' + inputClass,
+      {
+        type: 'text',
+        onkeyup: m.withAttr('value', ctrl.filterTable)
+      });
   }
 
   var paginate    = [];
@@ -153,8 +168,8 @@ table.view = function(ctrl) {
     for(var i = startNumber; i < endNumber; i++) {
       var number = i + 1;
       if(startNumber > 1 && i === startNumber) paginate.push('... ');
-      if(i < Math.ceil(ctrl.filtered.length / ctrl.paginate()) - 1) number += ' ';
-      if(i+1 !== ctrl.currentPage())
+      if(i < Math.ceil(ctrl.state.filtered.length / ctrl.state.paginate()) - 1) number += ' ';
+      if(i+1 !== ctrl.state.currentPage())
         paginate.push(m('span', {onclick: m.withAttr('textContent', ctrl.goToPage)}, number));
       else {
         paginate.push(
@@ -167,7 +182,11 @@ table.view = function(ctrl) {
   return [
     m('.mithril-table',
       {
-        style: ['height:', ctrl.state.height(), 'px;overflow-y:auto;overflow-x:hidden'].join(''), 
+        style: {
+          height: ctrl.state.height() + 'px',
+          'overflow-y': 'auto',
+          'overflow-x': 'hidden',
+        }, 
         onscroll: ctrl.state.updateState
       },
       [search, table]

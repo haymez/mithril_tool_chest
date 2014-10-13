@@ -24,15 +24,15 @@ var tableExample = {
 
     // Styles for table and search bar
     var opts = {
-      // paginate: 8,
-      height: 600,
+      // paginate: 10,
+      height: 400,
       infinite: true,
       search: true,
-      style: {
+      classNames: {
         up:     '.fa.fa-arrow-circle-up',
         down:   '.fa.fa-arrow-circle-down',
         table:  '.pure-table.pure-table-bordered.table-example',
-        input: '.search'
+        input: '.search',
       },
     }
 
