@@ -146,6 +146,7 @@ table.view = function(ctrl) {
       {
         style: {
           width: '99.5%',
+          'z-index': 1,
           position: 'relative',
           top: ctrl.state.divY()+'px'
         },
@@ -155,6 +156,10 @@ table.view = function(ctrl) {
     else
       search = m('input' + inputClass,
       {
+        style: {
+          width: '99.5%',
+          'z-index': 1,
+        },
         type: 'text',
         onkeyup: m.withAttr('value', ctrl.filterTable)
       });
