@@ -1,5 +1,6 @@
 m.route(document.body, '/', {
-  '/':      home,
+  '/':         home,
   '/features': features,
-  '/table': tableExample,
+  '/table':    tableExample,
+  '/forms':    formsExample,
 });

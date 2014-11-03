@@ -25,6 +25,8 @@ body {
   color: #000000;
   background-color: #E6E6E6;
   font-size: 100%;
+  display: inline-block;
+  font-weight: normal;
   padding: .5em 1em;
   text-align: center;
   -webkit-border-radius: 5px;
@@ -115,7 +117,7 @@ body {
   padding: 5px;
   text-align: center;
   background-color: #CCCCCC;
-  font-size: 2.5em;
+  font-size: 1.5em;
 }
 
 .base-big-banner > h1 {
@@ -134,3 +136,19 @@ body {
   font-size: 1.5em;
 }
 
+.fade-in {
+  -webkit-animation: fade-in .5s ease;
+}
+
+.fade-out {
+  -webkit-animation: fade-out .25s ease;
+}
+
+@-webkit-keyframes fade-in {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+@-webkit-keyframes fade-out {
+  from {opacity: 1;}
+  to {opacity: 0;}
+}

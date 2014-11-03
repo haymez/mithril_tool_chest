@@ -1,5 +1,7 @@
 var home = {
-  controller: function() {},
+  controller: function() {
+    this.rootCtrl = new rootLayout.controller();
+  },
 
   view: function(ctrl) {
 
@@ -29,7 +31,7 @@ var home = {
     for(var i = 0; i < 100; i++) {
     }
 
-    return rootLayout.view([intro, m('ul', filler)]);
+    return rootLayout.view(ctrl.rootCtrl, m('.fade-in#body', [intro, m('ul', filler)]));
   }
   
 };

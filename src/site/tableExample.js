@@ -1,5 +1,6 @@
 var tableExample = {
   controller: function() {
+    this.rootCtrl  = new rootLayout.controller();
     var firstNames = ['Sandy', 'Cheroll', 'Tommy', 'Ellis', 'Jordan', 'Linus', 'Pam'];
     var lastNames  = ['Hill', 'Goodman', 'Burgandy', 'Schrute', 'Doe', 'Smith', 'Higgins'];
     var cities     = ['Stonewall', 'Arcadia', 'Berwick', 'Pineville', 'Homer', 'Covington'];
@@ -36,16 +37,16 @@ var tableExample = {
       },
     }
 
-    // Instantiate table controller
+    // Instantiate table controller.
     this.table = new table.controller(this.rows, opts);
   },
   
   view: function(ctrl) {
     var example = m('.base-well', [
-      m('h1', 'Table Example'),
+      m('h1', 'Mithril Table'),
       table.view(ctrl.table),
     ]);
 
-    return rootLayout.view(example)
+    return rootLayout.view(ctrl.rootCtrl, m('.fade-in#body', example));
   }
 };
