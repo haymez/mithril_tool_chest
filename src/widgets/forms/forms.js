@@ -46,6 +46,7 @@ forms.controller = function(inputObjects) {
      Changes to be reverted: ' + this.undoStack.length)) {
       var obj = this.undoStack[0];
       for(var key in obj) {
+        this.prevHash[key] = obj[key];
         this.formData[key](obj[key]);
       }
       this.undoStack = [];
@@ -58,8 +59,6 @@ forms.controller = function(inputObjects) {
   this.redo = function(evt) {
     var obj = this.redoStack.pop();
     var undoObj = {};
-    console.log(this.redoStack);
-    console.log(obj);
     for(var key in obj) {
       undoObj[key] = this.formData[key]();
       this.formData[key](obj[key]);
@@ -72,8 +71,6 @@ forms.controller = function(inputObjects) {
   this.undo = function(evt) {
     var obj = this.undoStack.pop();
     var redoObj = {}
-    console.log(this.undoStack);
-    console.log(obj);
     for(var key in obj) {
       redoObj[key] = this.formData[key]();
       this.formData[key](obj[key]);
