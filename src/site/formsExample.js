@@ -5,13 +5,17 @@ formsExample.controller = function() {
   var a = m.prop('hey');
   var inputObjects = [
     {
-      element: m('input', {type: 'text', placeholder: 'Text Here'}),
-      value: 'Test',
       id: 'id1',
+      placeholder: 'Text Here',
+      inputType: 'input',
+      type: 'text',
+      value: 'Test',
       listener: 'onkeyup',
     },
     {
-      element: m('input', {type: 'text', placeholder: 'More Text'}),
+      inputType: 'input',
+      type: 'text',
+      placeholder: 'More Text',
       value: 'Another test',
       id: 'id2',
     },
