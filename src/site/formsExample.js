@@ -5,7 +5,6 @@ formsExample.controller = function() {
   var a = m.prop('hey');
   var inputObjects = [
     {
-      id: 'id1',
       placeholder: 'Text Here',
       inputType: 'input',
       type: 'text',
@@ -17,10 +16,17 @@ formsExample.controller = function() {
       type: 'text',
       placeholder: 'More Text',
       value: 'Another test',
-      id: 'id2',
     },
+    {
+      inputType: 'select',
+      value: 'Value 1',
+      options: ['Value 1', 'Value 2', 'Value 3', 'Value 4'],
+    }
   ];
-  this.forms = new forms.controller(inputObjects);
+  this.handleForm = function(data) {
+    console.log(data);
+  }
+  this.forms = new forms.controller(inputObjects, this.handleForm);
 }
 
 formsExample.view = function(ctrl) {

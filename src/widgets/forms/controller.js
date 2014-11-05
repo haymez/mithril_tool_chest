@@ -1,16 +1,16 @@
 var forms = {}
 
-forms.controller = function(inputObjects) {
+forms.controller = function(inputObjects, callback) {
   this.inputObjects = inputObjects;
-  this.undoStack = [];
-  this.redoStack = [];
-  this.formData = {};
-  this.prevHash = {};
+  this.undoStack    = [];
+  this.redoStack    = [];
+  this.formData     = {};
+  this.prevHash     = {};
 
 
   this.initForm = function() {
     for(var el in this.inputObjects) {
-      this.formData[this.inputObjects[el].id] = m.prop(this.inputObjects[el].value);
+      this.formData['id' + el] = m.prop(this.inputObjects[el].value);
     }
   }.bind(this);
 
@@ -20,6 +20,10 @@ forms.controller = function(inputObjects) {
     this.addToUndoStack();
     var target = evt.target
     this.formData[target.id](target.value);
+    var hash = {};
+    for(var key in this.formData) { hash[key] = this.formData[key](); }
+    callback.call(this, hash);
+    // console.log(hash);
     return target.value;
   }.bind(this);
 
