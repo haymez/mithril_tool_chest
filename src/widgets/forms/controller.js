@@ -1,7 +1,7 @@
 var forms = {}
 
-forms.controller = function(inputObjects, callback) {
-  this.inputObjects = inputObjects;
+forms.controller = function(fieldSets, callback) {
+  this.fieldSets    = fieldSets;
   this.undoStack    = [];
   this.redoStack    = [];
   this.formData     = {};
@@ -9,22 +9,31 @@ forms.controller = function(inputObjects, callback) {
 
 
   this.initForm = function() {
-    for(var el in this.inputObjects) {
-      this.formData['id' + el] = m.prop(this.inputObjects[el].value);
+    for(var fieldSet in this.fieldSets) {
+      var currFieldSet = this.fieldSets[fieldSet];
+      for(var el in currFieldSet.inputs) {
+        var itemId = 'id' + fieldSet + el;
+        var itemValue = ''
+        if(currFieldSet.inputs[el].checked != undefined) itemValue = currFieldSet.inputs[el].checked
+        else if(currFieldSet.inputs[el].value) itemValue = currFieldSet.inputs[el].value;
+        this.formData[itemId] = m.prop(itemValue);
+      }
     }
   }.bind(this);
 
 
   this.inputChanged = function(evt) {
     this.redoStack = [];
-    this.addToUndoStack();
     var target = evt.target
-    this.formData[target.id](target.value);
-    var hash = {};
-    for(var key in this.formData) { hash[key] = this.formData[key](); }
-    callback.call(this, hash);
-    // console.log(hash);
-    return target.value;
+    var setValue = (target.type === 'checkbox') ? target.checked : target.value;
+    if(setValue !== this.formData[target.id]()) {
+      this.addToUndoStack();
+      this.formData[target.id](setValue);
+      var hash = {};
+      for(var key in this.formData) { hash[key] = this.formData[key](); }
+      callback.call(this, hash);
+      return target.checked || target.value;
+    }
   }.bind(this);
 
 
@@ -58,7 +67,7 @@ forms.controller = function(inputObjects, callback) {
   this.undo = function(evt) {
     var obj = this.undoStack.pop();
     this.addToRedoStack();
-    for(var key in obj) { this.formData[key](obj[key]); }
+    for(var key in obj) {this.formData[key](obj[key]); }
     return false;
   }.bind(this);
 

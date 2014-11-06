@@ -5,28 +5,43 @@ formsExample.controller = function() {
   var a = m.prop('hey');
   var inputObjects = [
     {
-      placeholder: 'Text Here',
-      inputType: 'input',
-      type: 'text',
-      value: 'Test',
-      listener: 'onkeyup',
+      tagName:     'input',
+      type:        'text',
+      placeholder: 'Enter Username',
+      label:       'Username: ',
+      inputClass:  'field',
     },
     {
-      inputType: 'input',
-      type: 'text',
-      placeholder: 'More Text',
-      value: 'Another test',
+      tagName:     'input',
+      type:        'password',
+      placeholder: 'Enter Password',
+      label:       'Password: ',
+      inputClass:  'field',
     },
     {
-      inputType: 'select',
+      tagName: 'select',
       value: 'Value 1',
       options: ['Value 1', 'Value 2', 'Value 3', 'Value 4'],
+      label: 'List: ',
+      inputClass: 'field',
+    },
+    {
+      tagName: 'input',
+      type: 'checkbox',
+      label: 'Finished: ',
+      checked: false,
     }
+  ];
+  var fieldSets = [
+    {
+      legend: 'Example showcasing multiple types of inputs',
+      inputs: inputObjects,
+    },
   ];
   this.handleForm = function(data) {
     console.log(data);
   }
-  this.forms = new forms.controller(inputObjects, this.handleForm);
+  this.forms = new forms.controller(fieldSets, this.handleForm);
 }
 
 formsExample.view = function(ctrl) {

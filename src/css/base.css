@@ -132,6 +132,12 @@ body {
   margin: 0 5%;
 }
 
+.field input,
+.field select {
+  width: 90%;
+  display: block;
+}
+
 .description {
   font-size: 1.5em;
 }
