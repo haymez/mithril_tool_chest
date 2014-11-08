@@ -1,11 +1,13 @@
 var forms = {}
 
-forms.controller = function(fieldSets, callback) {
-  this.fieldSets    = fieldSets;
-  this.undoStack    = [];
-  this.redoStack    = [];
-  this.formData     = {};
-  this.prevHash     = {};
+forms.controller = function(fieldSets, callback, opts, thisRef) {
+  this.fieldSets       = fieldSets;
+  this.undoStack       = [];
+  this.redoStack       = [];
+  this.formData        = {};
+  this.prevHash        = {};
+  this.buttonCallbacks = {};
+  this.opts            = opts;
 
 
   this.initForm = function() {
@@ -13,12 +15,31 @@ forms.controller = function(fieldSets, callback) {
       var currFieldSet = this.fieldSets[fieldSet];
       for(var el in currFieldSet.inputs) {
         var itemId = 'id' + fieldSet + el;
+        // Initialize value using m.prop
         var itemValue = ''
         if(currFieldSet.inputs[el].checked != undefined) itemValue = currFieldSet.inputs[el].checked
         else if(currFieldSet.inputs[el].value) itemValue = currFieldSet.inputs[el].value;
         this.formData[itemId] = m.prop(itemValue);
+        // Handle callback if button
+        if(currFieldSet.inputs[el].tagName === 'button')
+          this.buttonCallbacks[itemId] = currFieldSet.inputs[el].callback;
       }
     }
+  }.bind(this);
+
+
+  this.getFormData = function() {
+    var hash = {}
+    for(var key in this.formData) {
+      hash[key] = this.formData[key]();
+    }
+    return hash;
+  }.bind(this);
+
+
+  this.buttonCallback = function(evt) {
+    this.buttonCallbacks[evt.target.id].call(thisRef || this, this.getFormData());
+    return false;
   }.bind(this);
 
 
@@ -29,9 +50,7 @@ forms.controller = function(fieldSets, callback) {
     if(setValue !== this.formData[target.id]()) {
       this.addToUndoStack();
       this.formData[target.id](setValue);
-      var hash = {};
-      for(var key in this.formData) { hash[key] = this.formData[key](); }
-      callback.call(this, hash);
+      callback.call(thisRef || this, this.getFormData());
       return target.checked || target.value;
     }
   }.bind(this);

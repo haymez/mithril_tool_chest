@@ -21,6 +21,7 @@ html, body { height: 100%; width: 100%; margin: 0; }
   nav.nav > ul {
     height: 100%;
     list-style: none;
+    cursor: pointer;
     margin: 0;
     padding: 0;
   }
@@ -39,7 +40,8 @@ html, body { height: 100%; width: 100%; margin: 0; }
     float: left;
     height: 100%;
     padding: 0 2% 0 2%;
-    transition: color 250ms linear, border-color 250ms ease;
+    -webkit-transition: all 250ms ease;
+    transition: all 250ms ease;
     color: #000000;
     text-align: center;
     line-height: 1.8em;

@@ -32,6 +32,8 @@ body {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
+  -webkit-transition: all 250ms ease;
+  transition: all 250ms ease;
 }
 
 .base-btn-hover,
@@ -127,6 +129,14 @@ body {
 
 
 /* Site Specific Stuff */
+.undo-group {
+  margin: 5px;
+}
+
+.undo-group button {
+  margin: 0 1px;
+}
+
 .content {
   width: 90%;
   margin: 0 5%;
