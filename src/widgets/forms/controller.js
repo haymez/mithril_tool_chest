@@ -1,6 +1,6 @@
 var forms = {}
 
-forms.controller = function(fieldSets, callback, opts, thisRef) {
+forms.controller = function(fieldSets, callback, opts) {
   this.fieldSets       = fieldSets;
   this.undoStack       = [];
   this.redoStack       = [];
@@ -14,15 +14,16 @@ forms.controller = function(fieldSets, callback, opts, thisRef) {
     for(var fieldSet in this.fieldSets) {
       var currFieldSet = this.fieldSets[fieldSet];
       for(var el in currFieldSet.inputs) {
-        var itemId = 'id' + fieldSet + el;
+        var itemId = currFieldSet.inputs[el].id || 'id' + fieldSet + el;
         // Initialize value using m.prop
         var itemValue = ''
         if(currFieldSet.inputs[el].checked != undefined) itemValue = currFieldSet.inputs[el].checked
         else if(currFieldSet.inputs[el].value) itemValue = currFieldSet.inputs[el].value;
-        this.formData[currFieldSet.inputs[el].id || itemId] = m.prop(itemValue);
+        if(currFieldSet.inputs[el].tagName !== 'button')
+          this.formData[itemId] = m.prop(itemValue);
         // Handle callback if button
         if(currFieldSet.inputs[el].tagName === 'button')
-          this.buttonCallbacks[currFieldSet.inputs[el].id || itemId] = currFieldSet.inputs[el].callback;
+          this.buttonCallbacks[itemId] = currFieldSet.inputs[el].callback;
       }
     }
   }.bind(this);
@@ -38,7 +39,7 @@ forms.controller = function(fieldSets, callback, opts, thisRef) {
 
 
   this.buttonCallback = function(evt) {
-    this.buttonCallbacks[evt.target.id].call(thisRef || this, this.getFormData());
+    this.buttonCallbacks[evt.target.id](this.getFormData());
     return false;
   }.bind(this);
 
@@ -50,7 +51,7 @@ forms.controller = function(fieldSets, callback, opts, thisRef) {
     if(setValue !== this.formData[target.id]()) {
       this.addToUndoStack();
       this.formData[target.id](setValue);
-      callback.call(thisRef || this, this.getFormData());
+      callback(this.getFormData());
       return target.checked || target.value;
     }
   }.bind(this);

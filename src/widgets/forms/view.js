@@ -1,5 +1,5 @@
 forms.view = function(ctrl) {
-  var currFieldsetIndex = null;
+  var currFieldsetIndex = '';
 
   var undoButtons = []
   if(ctrl.opts.showUndo) {
@@ -23,17 +23,18 @@ forms.view = function(ctrl) {
   }
 
   var handleElements = function(item, index) {
-    var itemId = 'id' + currFieldsetIndex + index;
+    var itemId = item.id || 'id' + currFieldsetIndex + index;
     // Create Element
     var type = (item.tagName !== 'input') ? null : item.type || 'text';
     var element = m(item.tagName, {
-      id: item.id || itemId,
+      id: itemId,
       class: item.class || '',
     }, (item.textValue) ? item.textValue : '');
     // Apply attributes
     element.attrs.type = type;
     element.attrs[item.listener || 'onchange'] = ctrl.inputChanged;
-    element.attrs[(item.checked != undefined) ? 'checked' : 'value'] = ctrl.formData[item.id || itemId]();
+    if(item.tagName !== 'button')
+      element.attrs[(item.checked != undefined) ? 'checked' : 'value'] = ctrl.formData[itemId]();
     // bind callback if element is button
     if(item.tagName === 'button') element.attrs.onclick = ctrl.buttonCallback;
     // Set placeholder if exists

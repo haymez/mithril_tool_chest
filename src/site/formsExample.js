@@ -2,17 +2,20 @@ var formsExample = {};
 
 formsExample.controller = function() {
   this.rootCtrl = new rootLayout.controller();
-  var a = m.prop('hey');
-
+  this.formChanges = m.prop(0);
 
   this.formChanged = function(data) {
-    console.log('Form Changed: ', data);
-  }
+    console.log('form changed: ', data)
+  }.bind(this);
 
 
-  var test = function(data) {
-    console.log('button callback. this: ', data);
-  }
+  this.buttonCallback = function(data) {
+    var str = '';
+    for(var key in data) {
+      str += key + ': ' + data[key] + '\n';
+    }
+    alert(str);
+  }.bind(this);
 
 
   var inputObjects = [
@@ -48,11 +51,11 @@ formsExample.controller = function() {
     },
     {
       tagName: 'button',
-      label: 'Submit: ',
-      textValue: 'Custom Callback',
+      label: 'Data: ',
+      textValue: 'Show Form Data',
       groupClass: 'field',
       class: 'base-btn base-btn-success',
-      callback: test,
+      callback: this.buttonCallback,
     },
   ];
   var fieldSets = [
@@ -70,7 +73,7 @@ formsExample.controller = function() {
     undoGroupClass:     'undo-group',
   }
 
-  this.forms = new forms.controller(fieldSets, this.formChanged, formOpts, this);
+  this.forms = new forms.controller(fieldSets, this.formChanged, formOpts);
 }
 
 
@@ -78,6 +81,7 @@ formsExample.view = function(ctrl) {
 
   var content = m('.base-well', [
     m('h1', 'Forms'),
+    m('h3', "Changes: " + ctrl.forms.undoStack.length),
     forms.view(ctrl.forms),
   ]);
   return rootLayout.view(ctrl.rootCtrl, m('.fade-in#body', content));
