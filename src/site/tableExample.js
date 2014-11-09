@@ -30,8 +30,8 @@ var tableExample = {
       infinite: true,
       search: true,
       classNames: {
-        up:     '.fa.fa-arrow-circle-up',
-        down:   '.fa.fa-arrow-circle-down',
+        up:     '.fa.fa-caret-up',
+        down:   '.fa.fa-caret-down',
         table:  '.pure-table.pure-table-bordered.table-example',
         input: '.search',
       },
