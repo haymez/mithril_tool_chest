@@ -19,10 +19,10 @@ forms.controller = function(fieldSets, callback, opts, thisRef) {
         var itemValue = ''
         if(currFieldSet.inputs[el].checked != undefined) itemValue = currFieldSet.inputs[el].checked
         else if(currFieldSet.inputs[el].value) itemValue = currFieldSet.inputs[el].value;
-        this.formData[itemId] = m.prop(itemValue);
+        this.formData[currFieldSet.inputs[el].id || itemId] = m.prop(itemValue);
         // Handle callback if button
         if(currFieldSet.inputs[el].tagName === 'button')
-          this.buttonCallbacks[itemId] = currFieldSet.inputs[el].callback;
+          this.buttonCallbacks[currFieldSet.inputs[el].id || itemId] = currFieldSet.inputs[el].callback;
       }
     }
   }.bind(this);

@@ -27,13 +27,13 @@ forms.view = function(ctrl) {
     // Create Element
     var type = (item.tagName !== 'input') ? null : item.type || 'text';
     var element = m(item.tagName, {
-      id: itemId,
+      id: item.id || itemId,
       class: item.class || '',
     }, (item.textValue) ? item.textValue : '');
     // Apply attributes
     element.attrs.type = type;
     element.attrs[item.listener || 'onchange'] = ctrl.inputChanged;
-    element.attrs[(item.checked != undefined) ? 'checked' : 'value'] = ctrl.formData[itemId]();
+    element.attrs[(item.checked != undefined) ? 'checked' : 'value'] = ctrl.formData[item.id || itemId]();
     // bind callback if element is button
     if(item.tagName === 'button') element.attrs.onclick = ctrl.buttonCallback;
     // Set placeholder if exists

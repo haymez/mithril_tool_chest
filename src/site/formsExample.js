@@ -6,7 +6,7 @@ formsExample.controller = function() {
 
 
   this.formChanged = function(data) {
-    console.log('Form Changed: ', data, data);
+    console.log('Form Changed: ', data);
   }
 
 
@@ -21,6 +21,7 @@ formsExample.controller = function() {
       placeholder: 'Enter Username',
       label:       'Username: ',
       groupClass:  'field',
+      id:          'username',
     },
     {
       tagName:     'input',
@@ -28,19 +29,22 @@ formsExample.controller = function() {
       placeholder: 'Enter Password',
       label:       'Password: ',
       groupClass:  'field',
+      id:          'password',
     },
     {
-      tagName: 'select',
-      value: 'Value 1',
-      options: ['Value 1', 'Value 2', 'Value 3', 'Value 4'],
-      label: 'List: ',
+      tagName:    'select',
+      value:      'Value 1',
+      options:    ['Value 1', 'Value 2', 'Value 3', 'Value 4'],
+      label:      'List:       ',
       groupClass: 'field',
+      id:         'selectBox',
     },
     {
       tagName: 'input',
-      type: 'checkbox',
-      label: 'Finished: ',
+      type:    'checkbox',
+      label:   'Finished: ',
       checked: false,
+      id:      'checkbox',
     },
     {
       tagName: 'button',
